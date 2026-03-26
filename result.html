@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Result</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Screening Result</h1>
+    <p id="resultText"></p>
+    <p id="advice"></p>
+
+    <p style="font-size:12px; color:gray;">
+    This tool is for awareness only. This is NOT a medical diagnosis.
+    Please consult a qualified doctor.
+    </p>
+</div>
+
+<script>
+let score = localStorage.getItem("result");
+let type = localStorage.getItem("type");
+
+let resultText = "";
+let advice = "";
+
+if(type === "pcod") {
+    if(score >= 8){
+        resultText = "⚠️ High Risk of PCOD";
+        advice = "Consult Gynecologist, Start Exercise, Reduce Sugar";
+    }
+    else if(score >= 4){
+        resultText = "🟠 Moderate Risk of PCOD";
+        advice = "Monitor periods, Maintain diet, Exercise";
+    }
+    else{
+        resultText = "🟢 Low Risk of PCOD";
+        advice = "Maintain healthy lifestyle";
+    }
+}
+
+if(type === "breast") {
+    if(score >= 9){
+        resultText = "⚠️ High Risk - Immediate Doctor Consultation Required";
+        advice = "Please consult a doctor immediately";
+    }
+    else if(score >= 4){
+        resultText = "🟠 Moderate Risk";
+        advice = "Do clinical breast exam";
+    }
+    else{
+        resultText = "🟢 Low Risk";
+        advice = "Do regular self breast exam";
+    }
+}
+
+document.getElementById("resultText").innerText = resultText;
+document.getElementById("advice").innerText = advice;
+</script>
+
+</body>
+</html>
