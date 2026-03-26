@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Women's Health Awareness</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Women's Health Awareness</h1>
+
+    <input type="text" id="name" placeholder="Name">
+    <input type="number" id="age" placeholder="Age">
+    <input type="number" id="height" placeholder="Height (cm)">
+    <input type="number" id="weight" placeholder="Weight (kg)">
+
+    <button onclick="saveUser()">Continue</button>
+
+    <p id="warning" style="color:red;"></p>
+</div>
+
+<script src="script.js"></script>
+
+<script>
+function saveUser() {
+    let age = document.getElementById("age").value;
+
+    if (age < 13) {
+        document.getElementById("warning").innerText =
+        "⚠️ Your age is below suitable range. Please consult a doctor.";
+    } else {
+        localStorage.setItem("age", age);
+        window.location.href = "select.html";
+    }
+}
+</script>
+
+</body>
+</html>
