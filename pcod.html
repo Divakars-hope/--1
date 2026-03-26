@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PCOD Screening</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>PCOD Screening</h1>
+
+    <p>Irregular periods? <br> மாதவிடாய் சரியாக வருகிறதா?</p>
+    <input type="checkbox" id="q1">
+
+    <p>Skipped periods > 2 months? <br> 2 மாதத்திற்கு மேல் மாதவிடாய் தவறியதா?</p>
+    <input type="checkbox" id="q2">
+
+    <p>Weight gain recently? <br> சமீபத்தில் எடை அதிகரித்ததா?</p>
+    <input type="checkbox" id="q3">
+
+    <p>Belly fat increase? <br> வயிற்றுப் பகுதியில் கொழுப்பு அதிகமா?</p>
+    <input type="checkbox" id="q4">
+
+    <p>Persistent acne? <br> தொடர்ந்து முகப்பரு உள்ளதா?</p>
+    <input type="checkbox" id="q5">
+
+    <p>Unwanted hair growth? <br> தேவையற்ற முடி வளர்ச்சி உள்ளதா?</p>
+    <input type="checkbox" id="q6">
+
+    <p>Hair fall? <br> முடி உதிர்வு அதிகமா?</p>
+    <input type="checkbox" id="q7">
+
+    <p>Dark patches on neck/underarms? <br> கழுத்து/கைமடியில் கருமை உள்ளதா?</p>
+    <input type="checkbox" id="q8">
+
+    <p>Family history PCOD/Diabetes? <br> குடும்பத்தில் PCOD/சர்க்கரை நோய் உள்ளதா?</p>
+    <input type="checkbox" id="q9">
+
+    <p>High stress? <br> அதிக மன அழுத்தம் உள்ளதா?</p>
+    <input type="checkbox" id="q10">
+
+    <p>Sleep less than 5 hrs? <br> 5 மணி நேரத்திற்கும் குறைவாக தூங்குகிறீர்களா?</p>
+    <input type="checkbox" id="q11">
+
+    <button onclick="pcodResult()">Submit</button>
+</div>
+
+<script src="script.js"></script>
+
+<script>
+function pcodResult() {
+    let score = 0;
+
+    if(q1.checked) score += 2;
+    if(q2.checked) score += 2;
+    if(q3.checked) score += 1;
+    if(q4.checked) score += 1;
+    if(q5.checked) score += 1;
+    if(q6.checked) score += 2;
+    if(q7.checked) score += 1;
+    if(q8.checked) score += 2;
+    if(q9.checked) score += 1;
+    if(q10.checked) score += 1;
+    if(q11.checked) score += 1;
+
+    localStorage.setItem("result", score);
+    localStorage.setItem("type", "pcod");
+
+    window.location.href = "result.html";
+}
+</script>
+
+</body>
+</html>
