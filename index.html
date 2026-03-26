@@ -1,37 +1,317 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Women's Health Awareness</title>
-    <link rel="stylesheet" href="style.css">
+  <title>Private Women's Health Screening</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6fb;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: #6b46c1;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 420px;
+      margin: auto;
+      padding: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .primary { background: #6b46c1; color: white; }
+    .secondary { background: #ec4899; color: white; }
+    .yes { background: #22c55e; color: white; }
+    .no { background: #ef4444; color: white; }
+
+    .small {
+      font-size: 12px;
+      color: gray;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .tamil {
+      font-size: 13px;
+      color: rgba(0,0,0,0.5);
+    }
+
+    .result { text-align: center; }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 15px;
+      border-radius: 20px;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .low { background: #22c55e; }
+    .mid { background: #f59e0b; }
+    .high { background: #ef4444; }
+
+    /* Female symbol animation */
+    .symbol {
+      position: fixed;
+      bottom: -50px;
+      font-size: 24px;
+      color: rgba(236,72,153,0.25);
+      animation: floatUp 10s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(0); }
+      to { transform: translateY(-110vh); }
+    }
+
+    /* Popup */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 5;
+    }
+
+    .popup-box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 300px;
+      text-align: center;
+    }
+  </style>
 </head>
+
 <body>
 
+<header>Women's Health Screening Tool</header>
+
+<!-- Female Symbols -->
+<div class="symbol" style="left:10%;">♀️</div>
+<div class="symbol" style="left:30%; animation-delay: 2s;">♀️</div>
+<div class="symbol" style="left:50%; animation-delay: 4s;">♀️</div>
+<div class="symbol" style="left:70%; animation-delay: 6s;">♀️</div>
+<div class="symbol" style="left:90%; animation-delay: 8s;">♀️</div>
+
 <div class="container">
-    <h1>Women's Health Awareness</h1>
 
-    <input type="text" id="name" placeholder="Name">
-    <input type="number" id="age" placeholder="Age">
-    <input type="number" id="height" placeholder="Height (cm)">
-    <input type="number" id="weight" placeholder="Weight (kg)">
+  <!-- HOME -->
+  <div class="card" id="home">
+    <h3>Your Details</h3>
 
-    <button onclick="saveUser()">Continue</button>
+    <input id="name" placeholder="Name (optional)">
+    <input id="age" placeholder="Age">
+    <input id="height" placeholder="Height (cm)">
+    <input id="weight" placeholder="Weight (kg)">
 
-    <p id="warning" style="color:red;"></p>
+    <button class="primary" onclick="checkAge('pcos')">PCOS Screening</button>
+    <button class="secondary" onclick="checkAge('breast')">Breast Health Check</button>
+
+    <div class="small">
+      ✔ No login required <br>
+      ✔ Your data is not stored <br>
+      ⚠ This tool is for awareness only
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="card" id="quiz" style="display:none;"></div>
+
 </div>
 
-<script src="script.js"></script>
+<!-- Age Popup -->
+<div class="popup" id="popup">
+  <div class="popup-box">
+    <h3>Age Warning</h3>
+    <p>This age is unusual for symptoms.<br>Please consult a doctor immediately.</p>
+    <button onclick="closePopup()">Continue</button>
+  </div>
+</div>
 
 <script>
-function saveUser() {
-    let age = document.getElementById("age").value;
+let step = 0;
+let score = 0;
+let questions = [];
+let tamil = [];
+let type = "";
 
-    if (age < 13) {
-        document.getElementById("warning").innerText =
-        "⚠️ Your age is below suitable range. Please consult a doctor.";
+function checkAge(selectedType) {
+  let age = document.getElementById("age").value;
+  type = selectedType;
+
+  if ((type === "breast" && age < 20) || (type === "pcos" && age < 14)) {
+    document.getElementById("popup").style.display = "flex";
+  } else {
+    startQuiz();
+  }
+}
+
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+  startQuiz();
+}
+
+function startQuiz() {
+  step = 0;
+  score = 0;
+
+  if (type === "pcos") {
+    questions = [
+      "Are your periods irregular?",
+      "Do you have frequent acne?",
+      "Do you notice facial hair growth?",
+      "Do you have weight gain?",
+      "Do you feel high stress often?"
+    ];
+
+    tamil = [
+      "உங்கள் மாதவிடாய் முறையற்றதா?",
+      "உங்களுக்கு அடிக்கடி முகப்பரு வருகிறதா?",
+      "முகத்தில் முடி வளர்ச்சி உள்ளதா?",
+      "உடல் எடை அதிகரித்துள்ளதா?",
+      "நீங்கள் அதிக மன அழுத்தம் அனுபவிக்கிறீர்களா?"
+    ];
+  }
+
+  if (type === "breast") {
+    questions = [
+      "Do you feel any lump in breast?",
+      "Any change in size/shape?",
+      "Any skin dimpling?",
+      "Any nipple discharge?",
+      "Persistent pain?"
+    ];
+
+    tamil = [
+      "மார்பகத்தில் கட்டி உணருகிறீர்களா?",
+      "அளவு/வடிவ மாற்றம் உள்ளதா?",
+      "தோலில் குழிவுகள் உள்ளதா?",
+      "நிப்பிள் வெளியேற்றம் உள்ளதா?",
+      "நிரந்தர வலி உள்ளதா?"
+    ];
+  }
+
+  showQuestion();
+}
+
+function showQuestion() {
+  document.getElementById("home").style.display = "none";
+
+  if (step < questions.length) {
+    document.getElementById("quiz").style.display = "block";
+    document.getElementById("quiz").innerHTML = `
+      <h3>${questions[step]}</h3>
+      <div class="tamil">${tamil[step]}</div>
+      <button class="yes" onclick="answer(1)">Yes</button>
+      <button class="no" onclick="answer(0)">No</button>
+    `;
+  } else {
+    showResult();
+  }
+}
+
+function answer(val) {
+  score += val;
+  step++;
+  showQuestion();
+}
+
+function getBMI() {
+  let h = document.getElementById("height").value / 100;
+  let w = document.getElementById("weight").value;
+  if (!h || !w) return "N/A";
+  return (w / (h*h)).toFixed(1);
+}
+
+function showResult() {
+  let result = "";
+  let className = "";
+  let message = "";
+
+  if (type === "pcos") {
+    if (score <= 1) {
+      result = "Low Risk";
+      className = "low";
+      message = "Minimal symptoms detected.";
+    } else if (score <= 3) {
+      result = "Moderate Risk";
+      className = "mid";
+      message = "Possible PCOS symptoms.";
     } else {
-        localStorage.setItem("age", age);
-        window.location.href = "select.html";
+      result = "High Risk";
+      className = "high";
+      message = "Please consult a gynecologist.";
     }
+  }
+
+  if (type === "breast") {
+    if (score >= 1) {
+      result = "Attention Needed";
+      className = "high";
+      message = "Please consult a doctor immediately.";
+    } else {
+      result = "No Immediate Risk";
+      className = "low";
+      message = "No concerning symptoms.";
+    }
+  }
+
+  document.getElementById("quiz").innerHTML = `
+    <div class="result">
+      <h2>${result}</h2>
+      <div class="badge ${className}">${result}</div>
+      <p>${message}</p>
+      <p><b>BMI:</b> ${getBMI()}</p>
+      <p class="small">
+        This tool is for awareness only.<br>
+        Consult a doctor for diagnosis.
+      </p>
+      <button onclick="location.reload()">Start Again</button>
+    </div>
+  `;
 }
 </script>
 
