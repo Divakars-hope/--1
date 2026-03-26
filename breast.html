@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Breast Cancer Screening</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Breast Cancer Screening</h1>
+
+    <p>Lump in breast? <br> மார்பகத்தில் கட்டி உள்ளதா?</p>
+    <input type="checkbox" id="b1">
+
+    <p>Lump is hard? <br> கட்டி கடினமாக உள்ளதா?</p>
+    <input type="checkbox" id="b2">
+
+    <p>Lump not moving? <br> கட்டி நகராமல் இருக்கிறதா?</p>
+    <input type="checkbox" id="b3">
+
+    <p>Nipple discharge? <br> நிப்பிள் சுரப்பு உள்ளதா?</p>
+    <input type="checkbox" id="b4">
+
+    <p>Bloody discharge? <br> இரத்த சுரப்பு உள்ளதா?</p>
+    <input type="checkbox" id="b5">
+
+    <p>Skin dimpling? <br> தோல் குழிவாக உள்ளதா?</p>
+    <input type="checkbox" id="b6">
+
+    <p>Breast size/shape change? <br> மார்பக வடிவம் மாற்றமா?</p>
+    <input type="checkbox" id="b7">
+
+    <p>Persistent pain? <br> ஒரே இடத்தில் வலி உள்ளதா?</p>
+    <input type="checkbox" id="b8">
+
+    <p>Family history? <br> குடும்பத்தில் மார்பக புற்றுநோய் உள்ளதா?</p>
+    <input type="checkbox" id="b9">
+
+    <button onclick="breastResult()">Submit</button>
+</div>
+
+<script src="script.js"></script>
+
+<script>
+function breastResult() {
+    let score = 0;
+
+    if(b1.checked) score += 5;
+    if(b2.checked) score += 2;
+    if(b3.checked) score += 2;
+    if(b4.checked) score += 3;
+    if(b5.checked) score += 5;
+    if(b6.checked) score += 3;
+    if(b7.checked) score += 2;
+    if(b8.checked) score += 2;
+    if(b9.checked) score += 3;
+
+    localStorage.setItem("result", score);
+    localStorage.setItem("type", "breast");
+
+    window.location.href = "result.html";
+}
+</script>
+
+</body>
+</html>
